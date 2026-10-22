@@ -20,17 +20,78 @@ body{
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
   display:flex; align-items:center; justify-content:center;
 }
+body::before, body::after{content:""; position:fixed; inset:0; pointer-events:none; z-index:-1}
 body::before{
-  content:""; position:fixed; inset:0; pointer-events:none; opacity:.5;
+  opacity:.55;
   background-image:
-    radial-gradient(1.5px 1.5px at 10% 15%, var(--fg) 60%, transparent 61%),
-    radial-gradient(1px 1px at 82% 10%, var(--fg) 60%, transparent 61%),
-    radial-gradient(1px 1px at 25% 78%, var(--fg) 60%, transparent 61%),
-    radial-gradient(1.5px 1.5px at 90% 70%, var(--fg) 60%, transparent 61%),
-    radial-gradient(1px 1px at 55% 92%, var(--fg) 60%, transparent 61%),
-    radial-gradient(1px 1px at 70% 28%, var(--fg) 60%, transparent 61%),
-    radial-gradient(1px 1px at 6% 52%, var(--fg) 60%, transparent 61%);
+    radial-gradient(1px 1px at 21% 52%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 11% 70%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 48% 76%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 66% 29%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 13% 57%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 10% 32%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 72% 56%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 74% 17%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 82% 82%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 75% 76%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 8% 30%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 73% 19%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 55% 20%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 75% 41%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 15% 76%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 49% 14%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 74% 9%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 65% 89%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 42% 61%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 48% 40%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 25% 91%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 12% 75%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 69% 65%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 95% 59%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 79% 11%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 67% 55%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 98% 45%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 64% 55%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 87% 11%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 45% 90%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 78% 65%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 10% 13%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 62% 91%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 9% 95%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 84% 75%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 38% 93%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 87% 46%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 61% 47%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 80% 16%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 9% 29%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 18% 96%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 52% 52%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 12% 23%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 53% 72%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 19% 57%, var(--fg) 60%, transparent 61%);
 }
+body::after{
+  background-image:
+    radial-gradient(2px 2px at 92% 55%, var(--fg) 60%, transparent 61%),
+    radial-gradient(2px 2px at 89% 50%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 21% 12%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 21% 31%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 3% 64%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 35% 38%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 20% 55%, var(--fg) 60%, transparent 61%),
+    radial-gradient(2px 2px at 80% 74%, var(--fg) 60%, transparent 61%),
+    radial-gradient(2px 2px at 18% 90%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 60% 89%, var(--fg) 60%, transparent 61%),
+    radial-gradient(2px 2px at 52% 53%, var(--fg) 60%, transparent 61%),
+    radial-gradient(2px 2px at 15% 63%, var(--fg) 60%, transparent 61%),
+    radial-gradient(2px 2px at 9% 26%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 28% 58%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 16% 45%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 15% 2%, var(--fg) 60%, transparent 61%);
+  animation:twinkle 5s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.15}to{opacity:.85}}
+@media (prefers-reduced-motion: reduce){body::after{animation:none; opacity:.5}}
 main{position:relative; width:min(92vw,420px); text-align:center; padding:24px 0}
 h1{font-size:1.1rem; font-weight:600; margin:0 0 20px; color:var(--muted); letter-spacing:.01em}
 .dial{width:min(62vw,250px); aspect-ratio:1; margin:0 auto}
@@ -62,7 +123,23 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
 .fs[data-on="1"] .ex{display:none}
 .fs[data-on="1"] .cp{display:inline}
 .fs.gear{right:auto; left:calc(16px + env(safe-area-inset-left,0px))}
+.ticker{position:fixed; left:calc(76px + env(safe-area-inset-left,0px)); right:calc(76px + env(safe-area-inset-right,0px)); bottom:calc(16px + env(safe-area-inset-bottom,0px)); height:48px; overflow:hidden; pointer-events:none; z-index:5; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.ticker span{position:absolute; left:0; top:50%; margin-top:-.8em; line-height:1.6; white-space:nowrap; font-size:1rem; color:var(--muted); will-change:transform}
+@media (prefers-reduced-motion: reduce){.ticker span{width:100%; text-align:center; white-space:normal; margin-top:-1.6em}}
+.fs.modesbtn{right:auto; left:calc(16px + env(safe-area-inset-left,0px)); bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+.modelist{display:flex; flex-direction:column; gap:10px; margin:0 0 16px}
+.modeopt{display:flex; flex-direction:column; align-items:flex-start; gap:4px; text-align:left; border-radius:14px; padding:12px 14px; font-weight:400}
+.modeopt b{font-weight:600}
+.modeopt span{font-size:.85rem; color:var(--muted)}
+.modeopt[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--bg)}
+.modeopt[aria-pressed="true"] span{color:var(--bg); opacity:.8}
 .panel{width:min(92vw,360px); max-height:90vh; overflow:auto}
+.sec{margin:0 0 18px}
+.sec + .sec{padding-top:16px; border-top:1px solid var(--track)}
+.sec:last-of-type{margin-bottom:0}
+.sec h3{margin:0 0 12px; font-size:.78rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.box .sec p.note{margin:4px 0 0}
+.slide input:disabled{opacity:.4}
 .panel h2{margin:0 0 16px; font-size:1.2rem}
 .opt{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 14px; text-align:left}
 .step{display:flex; align-items:center; gap:10px}
@@ -108,7 +185,14 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
     <button id="reset">Reiniciar</button>
   </div>
   <div class="count" id="count">Pomodoros completados: 0</div>
+  <div class="count" id="modeInfo" style="margin-top:6px"></div>
 </main>
+<div class="ticker" id="ticker" aria-live="off"><span id="tickerText"></span></div>
+<button class="fs modesbtn" id="modesBtn" title="Modos del temporizador" aria-label="Modos del temporizador">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>
+  </svg>
+</button>
 <button class="fs gear" id="gear" title="Opciones" aria-label="Opciones">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>
@@ -141,26 +225,45 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
 <div class="ask" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
   <div class="box panel">
     <h2 id="panelTitle">Opciones</h2>
-    <div class="opt"><span>Sonidos</span><button class="pill" id="soundBtn" aria-pressed="true">Activados</button></div>
-    <div class="opt"><span>Confirmaciones</span><button class="pill" id="confirmBtn" aria-pressed="true">Activadas</button></div>
-    <div class="opt"><span>Concentración</span>
-      <div class="slide"><input type="range" id="fRange" min="10" max="180" step="10" value="50" aria-label="Minutos de concentración"><output id="fVal">50 min</output></div>
-    </div>
-    <div class="opt"><span>Descanso</span>
-      <div class="slide"><input type="range" id="bRange" min="1" max="60" step="1" value="10" aria-label="Minutos de descanso"><output id="bVal">10 min</output></div>
-    </div>
-    <p class="note">Si ya has empezado, el cambio de tiempo se aplica en la siguiente fase.</p>
+    <section class="sec">
+      <h3>Temporizador</h3>
+      <div class="opt"><span>Concentración</span><div class="slide"><input type="range" id="fRange" min="10" max="180" step="10" value="50" aria-label="Minutos de concentración"><output id="fVal">50 min</output></div></div>
+      <div class="opt"><span>Descanso</span><div class="slide"><input type="range" id="bRange" min="1" max="60" step="1" value="10" aria-label="Minutos de descanso"><output id="bVal">10 min</output></div></div>
+      <p class="note">Si ya has empezado, el cambio de tiempo se aplica en la siguiente fase.</p>
+    </section>
+    <section class="sec">
+      <h3>Volumen</h3>
+      <div class="opt"><span>Sonidos</span><button class="pill" id="soundBtn" aria-pressed="true">Activados</button></div>
+      <div class="opt"><span>Volumen</span><div class="slide"><input type="range" id="volRange" min="0" max="100" step="5" value="100" aria-label="Volumen"><output id="volVal">100%</output></div></div>
+    </section>
+    <section class="sec">
+      <h3>General</h3>
+      <div class="opt"><span>Confirmaciones</span><button class="pill" id="confirmBtn" aria-pressed="true">Activadas</button></div>
+    </section>
     <div class="row"><button class="main" id="panelClose">Listo</button></div>
+  </div>
+</div>
+<div class="ask" id="modesPanel" role="dialog" aria-modal="true" aria-labelledby="modesTitle">
+  <div class="box panel">
+    <h2 id="modesTitle">Modos del temporizador</h2>
+    <div class="modelist">
+      <button class="modeopt" id="modeClassic" aria-pressed="true"><b>Modo normal</b><span>Concentración y descanso fijos, los de Opciones.</span></button>
+      <button class="modeopt" id="modeAnti" aria-pressed="false"><b>Modo anti-procrastinación</b><span>Empiezas con 10 min y la concentración sube 10 min en cada ciclo completado hasta tu máximo. El descanso no cambia.</span></button>
+    </div>
+    <div class="opt"><span>Máximo</span><div class="slide"><input type="range" id="aMaxRange" min="20" max="180" step="10" value="60" aria-label="Máximo de minutos de concentración"><output id="aMaxVal">60 min</output></div></div>
+    <div class="opt"><span>Descanso</span><div class="slide"><input type="range" id="aBreakRange" min="1" max="60" step="1" value="5" aria-label="Minutos de descanso en modo anti-procrastinación"><output id="aBreakVal">5 min</output></div></div>
+    <p class="note">Al cambiar de modo, el temporizador se reinicia.</p>
+    <div class="row"><button class="main" id="modesClose">Listo</button></div>
   </div>
 </div>
 <script>
 (function(){
-  var FOCUS = 50*60, BREAK = 10*60, muted = false, confirmOn = true, STORE = "pomodoro-settings";
+  var FOCUS = 50*60, BREAK = 10*60, muted = false, confirmOn = true, mode = "classic", level = 10, aMax = 60, aBreak = 5, volume = 1, STORE = "pomodoro-settings";
   try{
     var saved = JSON.parse(localStorage.getItem(STORE) || "null");
-    if(saved && saved.f >= 5 && saved.f <= 180 && saved.b >= 1 && saved.b <= 60){ FOCUS = Math.max(10, Math.round(saved.f/10)*10)*60; BREAK = saved.b*60; muted = !!saved.m; confirmOn = saved.c !== false; }
+    if(saved && saved.f >= 5 && saved.f <= 180 && saved.b >= 1 && saved.b <= 60){ FOCUS = Math.max(10, Math.round(saved.f/10)*10)*60; BREAK = saved.b*60; muted = !!saved.m; confirmOn = saved.c !== false; if(saved.mode === "anti") mode = "anti"; if(saved.aMax >= 20 && saved.aMax <= 180) aMax = saved.aMax; if(saved.aBreak >= 1 && saved.aBreak <= 60) aBreak = saved.aBreak; if(saved.v >= 0 && saved.v <= 1) volume = saved.v; }
   }catch(e){}
-  var phase = "focus", total = FOCUS, remaining = FOCUS, remMs = FOCUS*1000, endAt = 0, timer = null, done = 0, audio = null, prev = "", lastD = null;
+  var phase = "focus", total = focusSecs(), remaining = total, remMs = total*1000, endAt = 0, timer = null, done = 0, audio = null, master = null, prev = "", lastD = null;
   var $ = function(id){ return document.getElementById(id); };
 
   function fmt(s){
@@ -215,19 +318,26 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
     }
     $("label").textContent = phase === "focus" ? "Concentración" : "Descanso";
     $("count").textContent = "Pomodoros completados: " + done;
+    $("modeInfo").textContent = mode === "anti" ? "Anti-procrastinación: " + Math.min(level, aMax) + " de " + aMax + " min de concentración" : "";
     document.documentElement.setAttribute("data-phase", phase);
+    if(phase !== tickerPhase){ tickerPhase = phase; startTicker(); }
     document.title = fmt(remaining) + " · " + (phase === "focus" ? "Concentración" : "Descanso");
   }
 
   function ac(){
     if(muted) throw new Error("muted");
-    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    if(!audio){
+      audio = new (window.AudioContext || window.webkitAudioContext)();
+      master = audio.createGain();
+      master.gain.value = volume*volume;
+      master.connect(audio.destination);
+    }
     return audio;
   }
   function tone(f, t, vol, dur, type){
     var o = audio.createOscillator(), g = audio.createGain(), n = audio.currentTime + t;
     o.type = type || "sine"; o.frequency.value = f;
-    o.connect(g); g.connect(audio.destination);
+    o.connect(g); g.connect(master);
     g.gain.setValueAtTime(vol, n); g.gain.exponentialRampToValueAtTime(.001, n + dur);
     o.start(n); o.stop(n + dur);
   }
@@ -241,7 +351,7 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
       [[392, .05], [784, .012]].forEach(function(p){
         var o = audio.createOscillator(), g = audio.createGain();
         o.type = "sine"; o.frequency.value = p[0];
-        o.connect(g); g.connect(audio.destination);
+        o.connect(g); g.connect(master);
         g.gain.setValueAtTime(.0001, n);
         g.gain.exponentialRampToValueAtTime(p[1], n + .03);
         g.gain.exponentialRampToValueAtTime(.0001, n + .7);
@@ -258,7 +368,7 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
         o.type = "sine";
         o.frequency.setValueAtTime(330 * p[0], n);
         o.frequency.exponentialRampToValueAtTime(660 * p[0], n + .4);
-        o.connect(g); g.connect(audio.destination);
+        o.connect(g); g.connect(master);
         g.gain.setValueAtTime(.0001, n);
         g.gain.exponentialRampToValueAtTime(p[1], n + .08);
         g.gain.exponentialRampToValueAtTime(.0001, n + .8);
@@ -294,7 +404,7 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
       var bus = audio.createGain(), t0 = audio.currentTime, nodes = [];
       bus.gain.setValueAtTime(.0001, t0);
       bus.gain.exponentialRampToValueAtTime(1, t0 + 2.5);
-      bus.connect(audio.destination);
+      bus.connect(master);
       var len = audio.sampleRate*2, buf = audio.createBuffer(1, len, audio.sampleRate), d = buf.getChannelData(0), last = 0;
       for(var i = 0; i < len; i++){ last = (last + .02*(Math.random()*2 - 1))/1.02; d[i] = last*3.5; }
       var src = audio.createBufferSource(); src.buffer = buf; src.loop = true;
@@ -335,14 +445,61 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
     var o = audio.createOscillator(), g = audio.createGain(), n = audio.currentTime;
     o.type = "sine";
     o.frequency.setValueAtTime(f0, n); o.frequency.exponentialRampToValueAtTime(f1, n + dur);
-    o.connect(g); g.connect(audio.destination);
+    o.connect(g); g.connect(master);
     g.gain.setValueAtTime(.0001, n); g.gain.exponentialRampToValueAtTime(vol, n + .03);
     g.gain.exponentialRampToValueAtTime(.0001, n + dur + .15);
     o.start(n); o.stop(n + dur + .2);
   }
   function resetSound(){ try{ ac(); tone(440, 0, .12, .35); tone(294, .12, .12, .45); }catch(e){} }
+  var PHRASES = {
+    focus: [
+      "¡Recuerda desactivar las notificaciones de tu teléfono!",
+      "¡Sigue así!",
+      "Una cosa a la vez: ahora solo importa esta tarea.",
+      "Deja el móvil fuera de tu vista.",
+      "Respira hondo y vuelve a centrarte.",
+      "Cada minuto de concentración cuenta.",
+      "Ya has empezado, lo más difícil está hecho.",
+      "Relájate los hombros y cuida tu postura.",
+      "Ten un vaso de agua cerca."
+    ],
+    "break": [
+      "Lo has hecho bien.",
+      "Puedes aprovechar para ir a por algo de comer.",
+      "Levántate y estira un poco las piernas.",
+      "Bebe un poco de agua.",
+      "Mira por la ventana y descansa la vista.",
+      "Respira hondo, te lo has ganado.",
+      "Aléjate un momento de la pantalla."
+    ]
+  };
+  var tickerPhase = null, tickerAnim = null, tickerTimer = null,
+      tickerIdx = {focus: Math.floor(Math.random()*100), "break": Math.floor(Math.random()*100)},
+      reduceMotion = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function nextPhrase(){
+    var box = $("ticker"), el = $("tickerText"), list = PHRASES[tickerPhase];
+    if(tickerPhase === "focus" && mode === "anti") list = list.concat(["Cada ciclo te lleva un poco más lejos."]);
+    el.textContent = list[tickerIdx[tickerPhase]++ % list.length];
+    if(reduceMotion || !el.animate){
+      tickerTimer = setTimeout(nextPhrase, 7000);
+      return;
+    }
+    var W = box.clientWidth, w = el.offsetWidth;
+    tickerAnim = el.animate(
+      [{transform: "translateX(" + W + "px)"}, {transform: "translateX(" + (-w) + "px)"}],
+      {duration: (W + w)/45*1000, easing: "linear", fill: "forwards"}
+    );
+    tickerAnim.onfinish = nextPhrase;
+  }
+  function startTicker(){
+    if(tickerAnim){ tickerAnim.onfinish = null; tickerAnim.cancel(); tickerAnim = null; }
+    clearTimeout(tickerTimer);
+    nextPhrase();
+  }
+  function focusSecs(){ return mode === "anti" ? Math.min(level, aMax)*60 : FOCUS; }
+  function breakSecs(){ return mode === "anti" ? aBreak*60 : BREAK; }
   function setPhase(p){
-    phase = p; total = remaining = (p === "focus" ? FOCUS : BREAK); remMs = remaining*1000;
+    phase = p; total = remaining = (p === "focus" ? focusSecs() : breakSecs()); remMs = remaining*1000;
     if(timer) endAt = Date.now() + remMs;
     render();
   }
@@ -351,7 +508,7 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
     remaining = Math.floor(remMs/1000);
     if(remMs <= 0){
       beep();
-      if(phase === "focus") done++;
+      if(phase === "focus"){ done++; if(mode === "anti") level = Math.min(aMax, level + 10); }
       setPhase(phase === "focus" ? "break" : "focus");
       return;
     }
@@ -376,7 +533,7 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
   }
   $("start").onclick = function(){ timer ? pause() : start(); };
   $("reset").onclick = function(){
-    resetSound(); stopAmbient(); clearInterval(timer); timer = null; done = 0;
+    resetSound(); stopAmbient(); clearInterval(timer); timer = null; done = 0; level = 10;
     $("start").textContent = "Empezar";
     setPhase("focus");
   };
@@ -391,7 +548,7 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
   };
   $("askNo").onclick = closeAsk;
   $("askYes").onclick = function(){ closeAsk(); skipSound(); setPhase(phase === "focus" ? "break" : "focus"); };
-  document.addEventListener("keydown", function(e){ if(e.key === "Escape"){ closeAsk(); closeFs(); $("panel").classList.remove("open"); } });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape"){ closeAsk(); closeFs(); $("panel").classList.remove("open"); $("modesPanel").classList.remove("open"); } });
   var fb = $("full"), root = document.documentElement;
   function fsOn(){ return document.fullscreenElement || document.webkitFullscreenElement; }
   if(!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) fb.style.display = "none";
@@ -410,13 +567,16 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
   function fsLabel(){ var on = !!fsOn(), t = on ? "Salir de pantalla completa" : "Pantalla completa"; fb.setAttribute("data-on", on ? "1" : "0"); fb.title = t; fb.setAttribute("aria-label", t); }
   document.addEventListener("fullscreenchange", fsLabel);
   document.addEventListener("webkitfullscreenchange", fsLabel);
-  function save(){ try{ localStorage.setItem(STORE, JSON.stringify({f: FOCUS/60, b: BREAK/60, m: muted, c: confirmOn})); }catch(e){} }
+  function save(){ try{ localStorage.setItem(STORE, JSON.stringify({f: FOCUS/60, b: BREAK/60, m: muted, c: confirmOn, mode: mode, aMax: aMax, aBreak: aBreak, v: volume})); }catch(e){} }
   function syncPanel(){
     $("fVal").textContent = (FOCUS/60) + " min"; $("fRange").value = FOCUS/60;
     $("bVal").textContent = (BREAK/60) + " min"; $("bRange").value = BREAK/60;
     var s = $("soundBtn");
     s.textContent = muted ? "Desactivados" : "Activados";
     s.setAttribute("aria-pressed", muted ? "false" : "true");
+    $("volRange").value = Math.round(volume*100);
+    $("volVal").textContent = Math.round(volume*100) + "%";
+    $("volRange").disabled = muted;
     var c = $("confirmBtn");
     c.textContent = confirmOn ? "Activadas" : "Desactivadas";
     c.setAttribute("aria-pressed", confirmOn ? "true" : "false");
@@ -432,8 +592,39 @@ button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
   $("panelClose").onclick = function(){ $("panel").classList.remove("open"); };
   $("soundBtn").onclick = function(){ muted = !muted; if(muted) stopAmbient(); else if(timer) startAmbient(); save(); syncPanel(); };
   $("confirmBtn").onclick = function(){ confirmOn = !confirmOn; save(); syncPanel(); };
+  $("volRange").oninput = function(){
+    volume = +this.value/100;
+    if(master) master.gain.setTargetAtTime(volume*volume, audio.currentTime, .05);
+    save(); syncPanel();
+  };
+  $("volRange").onchange = function(){ clickSound(); };
   $("fRange").oninput = function(){ setMinutes("f", +this.value - FOCUS/60); };
   $("bRange").oninput = function(){ setMinutes("b", +this.value - BREAK/60); };
+  function syncModes(){
+    $("modeClassic").setAttribute("aria-pressed", mode === "classic" ? "true" : "false");
+    $("modeAnti").setAttribute("aria-pressed", mode === "anti" ? "true" : "false");
+    $("aMaxRange").value = aMax; $("aMaxVal").textContent = aMax + " min";
+    $("aBreakRange").value = aBreak; $("aBreakVal").textContent = aBreak + " min";
+  }
+  function setMode(m){
+    if(m === mode) return;
+    mode = m; level = 10; done = 0;
+    clearInterval(timer); timer = null; stopAmbient();
+    $("start").textContent = "Empezar";
+    save(); syncModes(); setPhase("focus");
+  }
+  function setAnti(kind, v){
+    var fresh = !timer && remMs === total*1000;
+    if(kind === "max"){ aMax = v; level = Math.min(level, aMax); } else aBreak = v;
+    save(); syncModes();
+    if(fresh) setPhase(phase); else render();
+  }
+  $("modesBtn").onclick = function(){ syncModes(); $("modesPanel").classList.add("open"); $("modesClose").focus(); };
+  $("modesClose").onclick = function(){ $("modesPanel").classList.remove("open"); };
+  $("modeClassic").onclick = function(){ setMode("classic"); };
+  $("modeAnti").onclick = function(){ setMode("anti"); };
+  $("aMaxRange").oninput = function(){ setAnti("max", +this.value); };
+  $("aBreakRange").oninput = function(){ setAnti("break", +this.value); };
   render();
 })();
 </script>
