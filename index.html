@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Pomodoro</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#141518; --fg:#e9e9e6; --muted:#9a9b9e; --accent:#e4e4e4; --track:rgba(233,233,230,.10); --glow:rgba(233,233,230,.16);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-phase="break"]{ --bg:#24262b; --fg:#ececec; --muted:#a3a3a5; --accent:#d2d2d2; --track:rgba(236,236,236,.10); --glow:rgba(236,236,236,.12); }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg); color:var(--fg); transition:background .6s, color .6s;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  display:flex; align-items:center; justify-content:center;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.5;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 15%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 82% 10%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 25% 78%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1.5px 1.5px at 90% 70%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 55% 92%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 70% 28%, var(--fg) 60%, transparent 61%),
+    radial-gradient(1px 1px at 6% 52%, var(--fg) 60%, transparent 61%);
+}
+main{position:relative; width:min(92vw,420px); text-align:center; padding:24px 0}
+h1{font-size:1.1rem; font-weight:600; margin:0 0 20px; color:var(--muted); letter-spacing:.01em}
+.dial{width:min(62vw,250px); aspect-ratio:1; margin:0 auto}
+:root:fullscreen .dial{width:min(40vh,340px)}
+svg{width:100%; height:100%; filter:drop-shadow(0 0 16px var(--glow))}
+.disc{fill:var(--track); stroke:var(--muted); stroke-opacity:.4; stroke-width:1}
+.lit{fill:var(--fg); transition:fill .6s}
+.craters circle{fill:var(--bg); opacity:.14}
+.read{display:flex; flex-direction:column; align-items:center; margin-top:22px}
+.clock{display:flex; align-items:baseline; justify-content:center; gap:8px}
+.time{font-family:"Comic Sans MS","Comic Sans","Chalkboard SE","Comic Neue",cursive,sans-serif; font-size:clamp(3.6rem,20vw,5.6rem); font-weight:800; font-variant-numeric:tabular-nums; line-height:1}
+.time span{display:inline-block}
+.time span.flip{animation:roll .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes roll{0%{transform:translateY(-55%) scale(.85);opacity:0;filter:blur(3px);color:var(--accent)}60%{opacity:1;color:var(--accent)}100%{transform:none;opacity:1;filter:none;color:var(--fg)}}
+@media (prefers-reduced-motion: reduce){.time span.flip{animation:none}}
+.ms{font-family:"Comic Sans MS","Comic Sans","Chalkboard SE","Comic Neue",cursive,sans-serif; font-size:clamp(1.4rem,7vw,2rem); font-weight:600; font-variant-numeric:tabular-nums; color:var(--muted); width:3ch; text-align:left}
+.label{margin-top:10px; font-size:1.15rem; color:var(--fg)}
+.moonname{margin-top:4px; font-size:.95rem; color:var(--muted)}
+.controls{display:flex; gap:10px; justify-content:center; margin-top:26px; flex-wrap:wrap}
+button{
+  font:inherit; font-weight:600; font-size:1rem; padding:12px 22px; border-radius:999px; cursor:pointer;
+  border:2px solid var(--fg); background:transparent; color:var(--fg);
+}
+button.main{background:var(--accent); border-color:var(--accent); color:var(--bg); min-width:120px}
+button:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
+.fs{position:fixed; right:calc(16px + env(safe-area-inset-right,0px)); bottom:calc(16px + env(safe-area-inset-bottom,0px)); width:48px; height:48px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:10}
+.fs svg{width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; filter:none}
+.fs .cp{display:none}
+.fs[data-on="1"] .ex{display:none}
+.fs[data-on="1"] .cp{display:inline}
+.fs.gear{right:auto; left:calc(16px + env(safe-area-inset-left,0px))}
+.panel{width:min(92vw,360px); max-height:90vh; overflow:auto}
+.panel h2{margin:0 0 16px; font-size:1.2rem}
+.opt{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 14px; text-align:left}
+.step{display:flex; align-items:center; gap:10px}
+.step button{width:40px; height:40px; padding:0; font-size:1.3rem; line-height:1; border-radius:50%}
+.step output{min-width:64px; text-align:center; font-weight:600}
+.slide{display:flex; align-items:center; gap:10px}
+.slide input{width:100px; accent-color:var(--accent)}
+.slide output{min-width:56px; text-align:right; font-weight:600}
+.pill{padding:8px 16px}
+.box p.note{margin:4px 0 18px; font-size:.85rem; color:var(--muted)}
+.ask{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.55); padding:20px; z-index:20}
+.ask.open{display:flex}
+.box{background:var(--bg); color:var(--fg); border:2px solid var(--fg); border-radius:18px; padding:24px; max-width:360px; text-align:center}
+.box p{margin:0 0 18px; font-size:1.05rem; line-height:1.4}
+.row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+.count{margin-top:22px; color:var(--muted); font-size:.95rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>Temporizador Pomodoro</h1>
+  <div class="dial">
+    <svg viewBox="0 0 200 200" aria-hidden="true">
+      <defs><clipPath id="litClip"><path id="litClipPath" d=""/></clipPath></defs>
+      <circle class="disc" cx="100" cy="100" r="92"/>
+      <path class="lit" id="lit" d=""/>
+      <g class="craters" clip-path="url(#litClip)">
+        <circle cx="70" cy="70" r="14"/><circle cx="120" cy="116" r="20"/><circle cx="85" cy="142" r="9"/><circle cx="136" cy="62" r="8"/><circle cx="55" cy="108" r="6"/>
+      </g>
+    </svg>
+  </div>
+  <div class="read">
+    <div class="clock">
+      <div class="time" id="time" role="timer" aria-live="off">50:00</div>
+      <div class="ms" id="ms">.00</div>
+    </div>
+    <div class="label" id="label">Concentración</div>
+    <div class="moonname" id="moonName">Luna nueva</div>
+  </div>
+  <div class="controls">
+    <button class="main" id="start">Empezar</button>
+    <button id="skip">Saltar fase</button>
+    <button id="reset">Reiniciar</button>
+  </div>
+  <div class="count" id="count">Pomodoros completados: 0</div>
+</main>
+<button class="fs gear" id="gear" title="Opciones" aria-label="Opciones">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>
+  </svg>
+</button>
+<button class="fs" id="full" data-on="0" title="Pantalla completa" aria-label="Pantalla completa">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <g class="ex"><path d="M9 3H3v6M3 3l7 7M15 21h6v-6M21 21l-7-7"/></g>
+    <g class="cp"><path d="M4 14h6v6M10 14l-7 7M20 10h-6V4M14 10l7-7"/></g>
+  </svg>
+</button>
+<div class="ask" id="ask" role="dialog" aria-modal="true" aria-labelledby="askText">
+  <div class="box">
+    <p id="askText">¿Seguro que quieres saltar la fase? Puedes aprovechar un poco más de tiempo.</p>
+    <div class="row">
+      <button class="main" id="askNo">Seguir aquí</button>
+      <button id="askYes">Saltar fase</button>
+    </div>
+  </div>
+</div>
+<div class="ask" id="askFs" role="dialog" aria-modal="true" aria-labelledby="askFsText">
+  <div class="box">
+    <p id="askFsText">¿Estás seguro de que quieres salir de la pantalla completa?</p>
+    <div class="row">
+      <button class="main" id="fsNo">Quedarme aquí</button>
+      <button id="fsYes">Salir</button>
+    </div>
+  </div>
+</div>
+<div class="ask" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+  <div class="box panel">
+    <h2 id="panelTitle">Opciones</h2>
+    <div class="opt"><span>Sonidos</span><button class="pill" id="soundBtn" aria-pressed="true">Activados</button></div>
+    <div class="opt"><span>Confirmaciones</span><button class="pill" id="confirmBtn" aria-pressed="true">Activadas</button></div>
+    <div class="opt"><span>Concentración</span>
+      <div class="slide"><input type="range" id="fRange" min="10" max="180" step="10" value="50" aria-label="Minutos de concentración"><output id="fVal">50 min</output></div>
+    </div>
+    <div class="opt"><span>Descanso</span>
+      <div class="slide"><input type="range" id="bRange" min="1" max="60" step="1" value="10" aria-label="Minutos de descanso"><output id="bVal">10 min</output></div>
+    </div>
+    <p class="note">Si ya has empezado, el cambio de tiempo se aplica en la siguiente fase.</p>
+    <div class="row"><button class="main" id="panelClose">Listo</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var FOCUS = 50*60, BREAK = 10*60, muted = false, confirmOn = true, STORE = "pomodoro-settings";
+  try{
+    var saved = JSON.parse(localStorage.getItem(STORE) || "null");
+    if(saved && saved.f >= 5 && saved.f <= 180 && saved.b >= 1 && saved.b <= 60){ FOCUS = Math.max(10, Math.round(saved.f/10)*10)*60; BREAK = saved.b*60; muted = !!saved.m; confirmOn = saved.c !== false; }
+  }catch(e){}
+  var phase = "focus", total = FOCUS, remaining = FOCUS, remMs = FOCUS*1000, endAt = 0, timer = null, done = 0, audio = null, prev = "", lastD = null;
+  var $ = function(id){ return document.getElementById(id); };
+
+  function fmt(s){
+    var m = Math.floor(s/60), r = s%60;
+    return (m<10?"0":"")+m+":"+(r<10?"0":"")+r;
+  }
+  function showTime(s){
+    var el = $("time");
+    if(el.children.length !== s.length){
+      el.innerHTML = "";
+      for(var k = 0; k < s.length; k++) el.appendChild(document.createElement("span"));
+      prev = "";
+    }
+    for(var i = 0; i < s.length; i++){
+      var sp = el.children[i];
+      if(sp.textContent !== s[i]){
+        sp.textContent = s[i];
+        if(prev){ sp.classList.remove("flip"); void sp.offsetWidth; sp.classList.add("flip"); }
+      }
+    }
+    prev = s;
+  }
+  // f: 0 = luna nueva, 0.5 = luna llena, 1 = luna nueva
+  function moonPath(f){
+    if(f <= .002 || f >= .998) return "";
+    var c = Math.cos(2*Math.PI*f), rx = (92*Math.abs(c)).toFixed(2), waxing = f < .5;
+    var limb = waxing ? "M100 8A92 92 0 0 1 100 192" : "M100 8A92 92 0 0 0 100 192";
+    var sweep = waxing ? (c > 0 ? 0 : 1) : (c > 0 ? 1 : 0);
+    return limb + "A" + rx + " 92 0 0 " + sweep + " 100 8Z";
+  }
+  function moonName(f){
+    if(f < .03 || f >= .97) return "Luna nueva";
+    if(f < .22) return "Luna creciente";
+    if(f < .28) return "Cuarto creciente";
+    if(f < .47) return "Gibosa creciente";
+    if(f < .53) return "Luna llena";
+    if(f < .72) return "Gibosa menguante";
+    if(f < .78) return "Cuarto menguante";
+    return "Luna menguante";
+  }
+  function render(){
+    showTime(fmt(remaining));
+    $("ms").textContent = "." + ("0" + Math.floor((remMs % 1000)/10)).slice(-2);
+    var p = Math.min(1, Math.max(0, 1 - remMs/(total*1000)));
+    var f = phase === "focus" ? p*.5 : .5 + p*.5;
+    var d = moonPath(f);
+    if(d !== lastD){
+      lastD = d;
+      $("lit").setAttribute("d", d);
+      $("litClipPath").setAttribute("d", d);
+      $("moonName").textContent = moonName(f);
+    }
+    $("label").textContent = phase === "focus" ? "Concentración" : "Descanso";
+    $("count").textContent = "Pomodoros completados: " + done;
+    document.documentElement.setAttribute("data-phase", phase);
+    document.title = fmt(remaining) + " · " + (phase === "focus" ? "Concentración" : "Descanso");
+  }
+
+  function ac(){
+    if(muted) throw new Error("muted");
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    return audio;
+  }
+  function tone(f, t, vol, dur, type){
+    var o = audio.createOscillator(), g = audio.createGain(), n = audio.currentTime + t;
+    o.type = type || "sine"; o.frequency.value = f;
+    o.connect(g); g.connect(audio.destination);
+    g.gain.setValueAtTime(vol, n); g.gain.exponentialRampToValueAtTime(.001, n + dur);
+    o.start(n); o.stop(n + dur);
+  }
+  function chime(){ try{ ac(); tone(523, 0, .25, .5, "triangle"); tone(784, .15, .25, .5, "triangle"); }catch(e){} }
+  function pauseChime(){ try{ ac(); tone(784, 0, .25, .5, "triangle"); tone(523, .15, .25, .5, "triangle"); }catch(e){} }
+  function beep(){ try{ ac(); [0, .25, .5].forEach(function(t){ tone(880, t, .2, .2); }); }catch(e){} }
+  function clickSound(){
+    try{
+      ac();
+      var n = audio.currentTime;
+      [[392, .05], [784, .012]].forEach(function(p){
+        var o = audio.createOscillator(), g = audio.createGain();
+        o.type = "sine"; o.frequency.value = p[0];
+        o.connect(g); g.connect(audio.destination);
+        g.gain.setValueAtTime(.0001, n);
+        g.gain.exponentialRampToValueAtTime(p[1], n + .03);
+        g.gain.exponentialRampToValueAtTime(.0001, n + .7);
+        o.start(n); o.stop(n + .75);
+      });
+    }catch(e){}
+  }
+  function skipSound(){
+    try{
+      ac();
+      var n = audio.currentTime;
+      [[1, .14], [1.5, .05]].forEach(function(p){
+        var o = audio.createOscillator(), g = audio.createGain();
+        o.type = "sine";
+        o.frequency.setValueAtTime(330 * p[0], n);
+        o.frequency.exponentialRampToValueAtTime(660 * p[0], n + .4);
+        o.connect(g); g.connect(audio.destination);
+        g.gain.setValueAtTime(.0001, n);
+        g.gain.exponentialRampToValueAtTime(p[1], n + .08);
+        g.gain.exponentialRampToValueAtTime(.0001, n + .8);
+        o.start(n); o.stop(n + .85);
+      });
+    }catch(e){}
+  }
+
+  var amb = null, ambTimers = [];
+  function cricket(bus, freq, gap){
+    var h = {};
+    ambTimers.push(h);
+    function chirp(){
+      if(amb !== bus) return;
+      var n = audio.currentTime, pulses = 3 + Math.floor(Math.random()*2);
+      for(var i = 0; i < pulses; i++){
+        var o = audio.createOscillator(), g = audio.createGain(), t = n + i*.07;
+        o.frequency.value = freq + Math.random()*40;
+        o.connect(g); g.connect(bus);
+        g.gain.setValueAtTime(.0001, t);
+        g.gain.exponentialRampToValueAtTime(.012, t + .01);
+        g.gain.exponentialRampToValueAtTime(.0001, t + .055);
+        o.start(t); o.stop(t + .06);
+      }
+      h.t = setTimeout(chirp, gap*(.7 + Math.random()*.8)*1000);
+    }
+    h.t = setTimeout(chirp, Math.random()*gap*1000);
+  }
+  function startAmbient(){
+    if(amb || muted) return;
+    try{
+      ac();
+      var bus = audio.createGain(), t0 = audio.currentTime, nodes = [];
+      bus.gain.setValueAtTime(.0001, t0);
+      bus.gain.exponentialRampToValueAtTime(1, t0 + 2.5);
+      bus.connect(audio.destination);
+      var len = audio.sampleRate*2, buf = audio.createBuffer(1, len, audio.sampleRate), d = buf.getChannelData(0), last = 0;
+      for(var i = 0; i < len; i++){ last = (last + .02*(Math.random()*2 - 1))/1.02; d[i] = last*3.5; }
+      var src = audio.createBufferSource(); src.buffer = buf; src.loop = true;
+      var lp = audio.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 500;
+      var wg = audio.createGain(); wg.gain.value = .12;
+      src.connect(lp); lp.connect(wg); wg.connect(bus); src.start(); nodes.push(src);
+      var lfo = audio.createOscillator(), lg = audio.createGain();
+      lfo.frequency.value = .08; lg.gain.value = .06;
+      lfo.connect(lg); lg.connect(wg.gain); lfo.start(); nodes.push(lfo);
+      [196, 293.66].forEach(function(f){
+        var o = audio.createOscillator(), g = audio.createGain();
+        o.frequency.value = f; g.gain.value = .012;
+        o.connect(g); g.connect(bus); o.start(); nodes.push(o);
+      });
+      bus._nodes = nodes;
+      amb = bus;
+      cricket(bus, 4300, 1.3); cricket(bus, 4700, 1.9); cricket(bus, 5100, 2.6);
+    }catch(e){ amb = null; }
+  }
+  function stopAmbient(){
+    if(!amb) return;
+    var a = amb;
+    amb = null;
+    ambTimers.forEach(function(h){ clearTimeout(h.t); });
+    ambTimers = [];
+    try{
+      var n = audio.currentTime;
+      a.gain.cancelScheduledValues(n);
+      a.gain.setValueAtTime(Math.max(a.gain.value, .0001), n);
+      a.gain.exponentialRampToValueAtTime(.0001, n + .8);
+    }catch(e){}
+    setTimeout(function(){
+      (a._nodes || []).forEach(function(x){ try{ x.stop(); }catch(e){} });
+      try{ a.disconnect(); }catch(e){}
+    }, 1000);
+  }
+  function glide(f0, f1, dur, vol){
+    var o = audio.createOscillator(), g = audio.createGain(), n = audio.currentTime;
+    o.type = "sine";
+    o.frequency.setValueAtTime(f0, n); o.frequency.exponentialRampToValueAtTime(f1, n + dur);
+    o.connect(g); g.connect(audio.destination);
+    g.gain.setValueAtTime(.0001, n); g.gain.exponentialRampToValueAtTime(vol, n + .03);
+    g.gain.exponentialRampToValueAtTime(.0001, n + dur + .15);
+    o.start(n); o.stop(n + dur + .2);
+  }
+  function resetSound(){ try{ ac(); tone(440, 0, .12, .35); tone(294, .12, .12, .45); }catch(e){} }
+  function setPhase(p){
+    phase = p; total = remaining = (p === "focus" ? FOCUS : BREAK); remMs = remaining*1000;
+    if(timer) endAt = Date.now() + remMs;
+    render();
+  }
+  function tick(){
+    remMs = Math.max(0, endAt - Date.now());
+    remaining = Math.floor(remMs/1000);
+    if(remMs <= 0){
+      beep();
+      if(phase === "focus") done++;
+      setPhase(phase === "focus" ? "break" : "focus");
+      return;
+    }
+    render();
+  }
+  function start(){
+    try{ ac(); }catch(e){}
+    endAt = Date.now() + remMs;
+    timer = setInterval(tick, 33);
+    chime();
+    startAmbient();
+    $("start").textContent = "Pausar";
+  }
+  function pause(){
+    remMs = Math.max(0, endAt - Date.now());
+    remaining = Math.floor(remMs/1000);
+    clearInterval(timer); timer = null;
+    render();
+    $("start").textContent = "Continuar";
+    stopAmbient();
+    pauseChime();
+  }
+  $("start").onclick = function(){ timer ? pause() : start(); };
+  $("reset").onclick = function(){
+    resetSound(); stopAmbient(); clearInterval(timer); timer = null; done = 0;
+    $("start").textContent = "Empezar";
+    setPhase("focus");
+  };
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest("button");
+    if(b && b.id !== "start" && b.id !== "askYes" && b.id !== "reset" && b.id !== "full" && b.id !== "fsYes" && !(b.id === "skip" && !confirmOn)) clickSound();
+  });
+  function closeAsk(){ $("ask").classList.remove("open"); }
+  $("skip").onclick = function(){
+    if(!confirmOn){ skipSound(); setPhase(phase === "focus" ? "break" : "focus"); return; }
+    $("ask").classList.add("open"); $("askNo").focus();
+  };
+  $("askNo").onclick = closeAsk;
+  $("askYes").onclick = function(){ closeAsk(); skipSound(); setPhase(phase === "focus" ? "break" : "focus"); };
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape"){ closeAsk(); closeFs(); $("panel").classList.remove("open"); } });
+  var fb = $("full"), root = document.documentElement;
+  function fsOn(){ return document.fullscreenElement || document.webkitFullscreenElement; }
+  if(!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) fb.style.display = "none";
+  function closeFs(){ $("askFs").classList.remove("open"); }
+  fb.onclick = function(){ if(fsOn() && confirmOn){ $("askFs").classList.add("open"); $("fsNo").focus(); } else toggleFs(); };
+  $("fsNo").onclick = closeFs;
+  $("fsYes").onclick = function(){ closeFs(); toggleFs(); };
+  function toggleFs(){
+    try{ ac(); if(fsOn()) glide(520, 300, .22, .12); else glide(300, 520, .22, .12); }catch(e){}
+    try{
+      var r = fsOn() ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+                     : (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+      if(r && r.catch) r.catch(function(){});
+    }catch(e){}
+  };
+  function fsLabel(){ var on = !!fsOn(), t = on ? "Salir de pantalla completa" : "Pantalla completa"; fb.setAttribute("data-on", on ? "1" : "0"); fb.title = t; fb.setAttribute("aria-label", t); }
+  document.addEventListener("fullscreenchange", fsLabel);
+  document.addEventListener("webkitfullscreenchange", fsLabel);
+  function save(){ try{ localStorage.setItem(STORE, JSON.stringify({f: FOCUS/60, b: BREAK/60, m: muted, c: confirmOn})); }catch(e){} }
+  function syncPanel(){
+    $("fVal").textContent = (FOCUS/60) + " min"; $("fRange").value = FOCUS/60;
+    $("bVal").textContent = (BREAK/60) + " min"; $("bRange").value = BREAK/60;
+    var s = $("soundBtn");
+    s.textContent = muted ? "Desactivados" : "Activados";
+    s.setAttribute("aria-pressed", muted ? "false" : "true");
+    var c = $("confirmBtn");
+    c.textContent = confirmOn ? "Activadas" : "Desactivadas";
+    c.setAttribute("aria-pressed", confirmOn ? "true" : "false");
+  }
+  function setMinutes(kind, delta){
+    var fresh = !timer && remMs === total*1000;
+    if(kind === "f") FOCUS = Math.min(180, Math.max(5, FOCUS/60 + delta))*60;
+    else BREAK = Math.min(60, Math.max(1, BREAK/60 + delta))*60;
+    save(); syncPanel();
+    if(fresh) setPhase(phase);
+  }
+  $("gear").onclick = function(){ syncPanel(); $("panel").classList.add("open"); $("panelClose").focus(); };
+  $("panelClose").onclick = function(){ $("panel").classList.remove("open"); };
+  $("soundBtn").onclick = function(){ muted = !muted; if(muted) stopAmbient(); else if(timer) startAmbient(); save(); syncPanel(); };
+  $("confirmBtn").onclick = function(){ confirmOn = !confirmOn; save(); syncPanel(); };
+  $("fRange").oninput = function(){ setMinutes("f", +this.value - FOCUS/60); };
+  $("bRange").oninput = function(){ setMinutes("b", +this.value - BREAK/60); };
+  render();
+})();
+</script>
+</body>
+</html>
