@@ -328,6 +328,7 @@ body.drawer-open .tab svg{rotate:180deg}
       <h3>Sonido</h3>
       <div class="opt"><span>Sonidos</span><button class="pill" id="soundBtn" aria-pressed="true">Activados</button></div>
       <div class="opt"><span>Volumen</span><div class="slide"><input type="range" id="volRange" min="0" max="100" step="5" value="100" aria-label="Volumen"><output id="volVal">100%</output></div></div>
+      <div class="opt"><span>Ambiente en concentración</span><button class="pill" id="ambFocusBtn" aria-pressed="true">✓</button></div>
       <div class="opt"><span>Ambiente en descanso</span><button class="pill" id="ambBtn" aria-pressed="true">Activado</button></div>
       <div class="opt"><span>Grillos</span><button class="pill" id="cricketBtn" aria-pressed="true">✓</button></div>
     </section>
@@ -408,10 +409,10 @@ body.drawer-open .tab svg{rotate:180deg}
 </div>
 <script>
 (function(){
-  var FOCUS = 50*60, BREAK = 10*60, muted = false, confirmOn = true, mode = "classic", level = 10, aMax = 60, aBreak = 5, volume = 1, ambBreak = true, crickets = true, dialStyle = "moon", btnColor = null, bgColor = null, timerColor = null, STATKEY = "pomodoro-stats", stats = {ms: 0, pom: 0}, lastStatSave = 0, STORE = "pomodoro-settings";
+  var FOCUS = 50*60, BREAK = 10*60, muted = false, confirmOn = true, mode = "classic", level = 10, aMax = 60, aBreak = 5, volume = 1, ambBreak = true, ambFocus = true, crickets = true, dialStyle = "moon", btnColor = null, bgColor = null, timerColor = null, STATKEY = "pomodoro-stats", stats = {ms: 0, pom: 0}, lastStatSave = 0, STORE = "pomodoro-settings";
   try{
     var saved = JSON.parse(localStorage.getItem(STORE) || "null");
-    if(saved && saved.f >= 5 && saved.f <= 180 && saved.b >= 1 && saved.b <= 60){ FOCUS = Math.max(10, Math.round(saved.f/10)*10)*60; BREAK = saved.b*60; muted = !!saved.m; confirmOn = saved.c !== false; if(saved.mode === "anti") mode = "anti"; if(saved.aMax >= 20 && saved.aMax <= 180) aMax = saved.aMax; if(saved.aBreak >= 1 && saved.aBreak <= 60) aBreak = saved.aBreak; if(saved.v >= 0 && saved.v <= 1) volume = saved.v; if(saved.ab === false) ambBreak = false; if(saved.cr === false) crickets = false; if(saved.sty === "ring") dialStyle = "ring"; if(/^#[0-9a-f]{6}$/i.test(saved.bc)) btnColor = saved.bc; if(/^#[0-9a-f]{6}$/i.test(saved.bgc)) bgColor = saved.bgc; if(/^#[0-9a-f]{6}$/i.test(saved.tc)) timerColor = saved.tc; }
+    if(saved && saved.f >= 5 && saved.f <= 180 && saved.b >= 1 && saved.b <= 60){ FOCUS = Math.max(10, Math.round(saved.f/10)*10)*60; BREAK = saved.b*60; muted = !!saved.m; confirmOn = saved.c !== false; if(saved.mode === "anti") mode = "anti"; if(saved.aMax >= 20 && saved.aMax <= 180) aMax = saved.aMax; if(saved.aBreak >= 1 && saved.aBreak <= 60) aBreak = saved.aBreak; if(saved.v >= 0 && saved.v <= 1) volume = saved.v; if(saved.ab === false) ambBreak = false; if(saved.af === false) ambFocus = false; if(saved.cr === false) crickets = false; if(saved.sty === "ring") dialStyle = "ring"; if(/^#[0-9a-f]{6}$/i.test(saved.bc)) btnColor = saved.bc; if(/^#[0-9a-f]{6}$/i.test(saved.bgc)) bgColor = saved.bgc; if(/^#[0-9a-f]{6}$/i.test(saved.tc)) timerColor = saved.tc; }
   }catch(e){}
   var phase = "focus", total = focusSecs(), remaining = total, remMs = total*1000, endAt = 0, timer = null, done = 0, audio = null, master = null, prev = "", lastD = null;
   var $ = function(id){ return document.getElementById(id); };
@@ -593,7 +594,7 @@ body.drawer-open .tab svg{rotate:180deg}
     }, 1000);
   }
   function syncAmbient(){
-    if(timer && !muted && (phase === "focus" || ambBreak)) startAmbient();
+    if(timer && !muted && (phase === "focus" ? ambFocus : ambBreak)) startAmbient();
     else stopAmbient();
   }
   function glide(f0, f1, dur, vol){
@@ -728,7 +729,7 @@ body.drawer-open .tab svg{rotate:180deg}
   function fsLabel(){ var on = !!fsOn(), t = on ? "Salir de pantalla completa" : "Pantalla completa"; fb.setAttribute("data-on", on ? "1" : "0"); fb.title = t; fb.setAttribute("aria-label", t); }
   document.addEventListener("fullscreenchange", fsLabel);
   document.addEventListener("webkitfullscreenchange", fsLabel);
-  function save(){ try{ localStorage.setItem(STORE, JSON.stringify({f: FOCUS/60, b: BREAK/60, m: muted, c: confirmOn, mode: mode, aMax: aMax, aBreak: aBreak, v: volume, ab: ambBreak, cr: crickets, sty: dialStyle, bc: btnColor, bgc: bgColor, tc: timerColor})); }catch(e){} }
+  function save(){ try{ localStorage.setItem(STORE, JSON.stringify({f: FOCUS/60, b: BREAK/60, m: muted, c: confirmOn, mode: mode, aMax: aMax, aBreak: aBreak, v: volume, ab: ambBreak, af: ambFocus, cr: crickets, sty: dialStyle, bc: btnColor, bgc: bgColor, tc: timerColor})); }catch(e){} }
   function syncPanel(){
     $("fVal").textContent = (FOCUS/60) + " min"; $("fRange").value = FOCUS/60;
     $("bVal").textContent = (BREAK/60) + " min"; $("bRange").value = BREAK/60;
@@ -739,6 +740,11 @@ body.drawer-open .tab svg{rotate:180deg}
     $("volRange").value = Math.round(volume*100);
     $("volVal").textContent = Math.round(volume*100) + "%";
     $("volRange").disabled = muted;
+    var af = $("ambFocusBtn");
+    af.textContent = ambFocus ? "✓" : "✕";
+    af.setAttribute("aria-pressed", ambFocus ? "true" : "false");
+    af.setAttribute("aria-label", ambFocus ? "Ambiente en concentración activado" : "Ambiente en concentración desactivado"); af.title = af.getAttribute("aria-label");
+    af.disabled = muted;
     var ab = $("ambBtn");
     ab.textContent = ambBreak ? "✓" : "✕";
     ab.setAttribute("aria-label", ambBreak ? "Ambiente en descanso activado" : "Ambiente en descanso desactivado"); ab.title = ab.getAttribute("aria-label");
@@ -766,6 +772,7 @@ body.drawer-open .tab svg{rotate:180deg}
   $("soundBtn").onclick = function(){ muted = !muted; syncAmbient(); save(); syncPanel(); };
   $("confirmBtn").onclick = function(){ confirmOn = !confirmOn; save(); syncPanel(); };
   $("ambBtn").onclick = function(){ ambBreak = !ambBreak; save(); syncPanel(); syncAmbient(); };
+  $("ambFocusBtn").onclick = function(){ ambFocus = !ambFocus; save(); syncPanel(); syncAmbient(); };
   $("cricketBtn").onclick = function(){ crickets = !crickets; save(); syncPanel(); };
   $("volRange").oninput = function(){
     volume = +this.value/100;
